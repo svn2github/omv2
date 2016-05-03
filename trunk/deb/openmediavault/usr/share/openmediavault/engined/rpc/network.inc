@@ -235,7 +235,7 @@ class OMVRpcServiceNetwork extends \OMV\Rpc\ServiceAbstract {
 			$nib = $mngr->getBackend($devv);
 			// Set the default attributes.
 			$object = [
-				"uuid" => $GLOBALS['OMV_UUID_UNDEFINED'],
+				"uuid" => $GLOBALS['OMV_CONFIGOBJECT_NEW_UUID'],
 				"comment" =>  "",
 				"_used" =>  FALSE,
 				"_readonly" =>  FALSE
@@ -568,10 +568,10 @@ class OMVRpcServiceNetwork extends \OMV\Rpc\ServiceAbstract {
 	 *   not configured nor used will be appended to the result list.
 	 *   Defaults to TRUE.
 	 * @param context The context of the caller.
-	 * @return If \em uuid is set to OMV_UUID_UNDEFINED a list of available
-	 *   ethernet network interfaces (iface class objects) is returned,
-	 *   otherwise the bonded interface slaves plus the unreferenced ethernet
-	 *   network interfaces are returned.
+	 * @return If \em uuid is set to OMV_CONFIGOBJECT_NEW_UUID a list of
+	 *   available ethernet network interfaces (iface class objects) is
+	 *   returned, otherwise the bonded interface slaves plus the unreferenced
+	 *   ethernet network interfaces are returned.
 	 */
 	public function enumerateBondSlaves($params, $context) {
 		// Validate the RPC caller context.
@@ -649,7 +649,7 @@ class OMVRpcServiceNetwork extends \OMV\Rpc\ServiceAbstract {
 				$result[] = $this->getIfaceInfo($devv);
 			}
 		}
-		if ($params['uuid'] !== $GLOBALS['OMV_UUID_UNDEFINED']) {
+		if ($params['uuid'] !== $GLOBALS['OMV_CONFIGOBJECT_NEW_UUID']) {
 			// Get network interfaces already assigned to the bonding
 			// interface device.
 			$object = $db->getByFilter("conf.system.network.interface", [
@@ -716,7 +716,7 @@ class OMVRpcServiceNetwork extends \OMV\Rpc\ServiceAbstract {
 			  "The parameters 'bondprimary' and 'bondmode' are invalid.");
 		}
 		// - Check usage.
-		if ($params['uuid'] == $GLOBALS['OMV_UUID_UNDEFINED']) {
+		if ($params['uuid'] == $GLOBALS['OMV_CONFIGOBJECT_NEW_UUID']) {
 			// Check if the slaves are already used by another bond interface.
 			foreach (explode(",", $params['slaves']) as $slavek => $slavev) {
 				$db = \OMV\Config\Database::getInstance();
