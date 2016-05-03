@@ -117,10 +117,11 @@ class OMVRpcServiceNetwork extends \OMV\Rpc\ServiceAbstract {
 	/**
 	 * Helper function to store the interface configuration object.
 	 * @param params The method parameters.
-	 * @param object The object containing the specific interface attributes.
+	 * @param ifaceParams The object containing the specific interface
+	 *   attributes.
 	 * @return The configuration object.
 	 */
-    private function setInterfaceConfig($params, $object) {
+    private function setInterfaceConfig($params, $ifaceParams) {
 		// Modify various configuration attributes.
 		$params['dnsnameservers'] = preg_replace("/[,;]/", " ",
 		  $params['dnsnameservers']);
@@ -129,7 +130,7 @@ class OMVRpcServiceNetwork extends \OMV\Rpc\ServiceAbstract {
 		// Prepare the configuration object.
 		$object = new \OMV\Config\ConfigObject("conf.system.network.interface");
 		$object->setAssoc($params);
-		$object->setAssoc($object);
+		$object->setAssoc($ifaceParams);
 		// Set the configuration object.
 		$isNew = $object->isNew();
 		$db = \OMV\Config\Database::getInstance();
@@ -554,9 +555,9 @@ class OMVRpcServiceNetwork extends \OMV\Rpc\ServiceAbstract {
 		// RPC service method.
 		$this->validateMethodParams($params, "rpc.network.setethernetiface");
 		// Set the configuration object.
-		return $this->setInterfaceConfig($params, array(
+		return $this->setInterfaceConfig($params, [
 			"type" => "ethernet"
-		));
+		]);
 	}
 
 	/**
@@ -710,7 +711,7 @@ class OMVRpcServiceNetwork extends \OMV\Rpc\ServiceAbstract {
 		//   balance-tlb (5) and balance-alb (6) mode.
 		//   See https://www.kernel.org/doc/Documentation/networking/bonding.txt
 		if (empty($params['bondprimary']) && in_array($params['bondmode'],
-		  array(1, 5, 6))) {
+		  [ 1, 5, 6 ])) {
 			throw new \OMV\Exception(
 			  "The parameters 'bondprimary' and 'bondmode' are invalid.");
 		}
@@ -805,10 +806,10 @@ class OMVRpcServiceNetwork extends \OMV\Rpc\ServiceAbstract {
 		// RPC service method.
 		$this->validateMethodParams($params, "rpc.network.setvlaniface");
 		// Modify the method parameters.
-		$params = array_merge($params, array(
+		$params = array_merge($params, [
 			"devicename" => sprintf("%s.%d", $params['vlanrawdevice'],
-			  $params['vlanid']),
-		));
+			  $params['vlanid'])
+		]);
 		// Set the configuration object.
 		return $this->setInterfaceConfig($params, [
             "type" => "vlan",
